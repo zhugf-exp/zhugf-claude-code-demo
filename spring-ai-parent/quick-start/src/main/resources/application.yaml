@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: quick-start
+
+  # Spring AI — Anthropic Claude（阿里云 DashScope 代理）
+  ai:
+    anthropic:
+      api-key: ${AI_API_KEY:sk-ws-H.PMRMHLP.6F6R.MEUCICcuKM0axpzvrTN7fPYeHRXj1KUqtcijILJvgQRzBZwmAiEArTg60U7BGjGihSZGRc22h5I1ar3ymYsxuoJQ1P56IR8}
+      base-url: ${AI_BASE_URL:https://dashscope.aliyuncs.com/apps/anthropic}
+      chat:
+        options:
+          model: ${AI_MODEL:glm-4.5}
+          max-tokens: 1000000
+          temperature: ${AI_TEMPERATURE:0.7}

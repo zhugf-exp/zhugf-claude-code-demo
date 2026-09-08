@@ -1,0 +1,136 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: logistics-ai
+
+  # Spring AI — Anthropic Claude（阿里云 DashScope 代理）
+  ai:
+    anthropic:
+      api-key: ${AI_API_KEY:sk-ws-H.PMRMHLP.6F6R.MEUCICcuKM0axpzvrTN7fPYeHRXj1KUqtcijILJvgQRzBZwmAiEArTg60U7BGjGihSZGRc22h5I1ar3ymYsxuoJQ1P56IR8}
+      base-url: ${AI_BASE_URL:https://dashscope.aliyuncs.com/apps/anthropic}
+      chat:
+        options:
+          model: ${AI_MODEL:glm-4.5}
+          max-tokens: 1000000
+          temperature: ${AI_TEMPERATURE:0.7}
+
+# 业务配置
+logistics:
+  ai:
+    system-prompt: |
+      你是一个专业的物流 AI 助手，负责帮助用户处理物流相关问题。
+      你的能力包括：
+      1. 查询运单状态和物流轨迹
+      2. 计算运费
+      3. 规划物流路线
+      4. 处理客户投诉和建议
+
+      请用简洁、专业的中文回答用户的问题。
+      如果需要调用工具获取信息，请先向用户说明你将要做什么。
+
+    session:
+      # 会话超时时间（分钟）
+      timeout-minutes: 30
+      # 最大会话数
+      max-sessions: 1000
+
+    security:
+      # CORS配置
+      cors-enabled: true
+      allowed-origins:
+        - http://localhost:3000
+        - http://localhost:8080
+        - http://127.0.0.1:3000
+        - http://127.0.0.1:8080
+  business: # 运费规则
+      shipping-fee-rules:
+        同城:
+          base-fee: 10.0
+          extra-fee: 3.0
+        省内:
+          base-fee: 12.0
+          extra-fee: 5.0
+        华东:
+          base-fee: 15.0
+          extra-fee: 8.0
+        跨省:
+          base-fee: 18.0
+          extra-fee: 10.0
+        偏远:
+          base-fee: 25.0
+          extra-fee: 15.0
+
+      # 区域配置
+      region-config:
+        huadong:
+          - 上海
+          - 南京
+          - 杭州
+          - 苏州
+          - 合肥
+          - 无锡
+          - 宁波
+        remote:
+          - 西藏
+          - 新疆
+          - 青海
+          - 内蒙古
+
+      # 模拟订单数据
+      mock-orders:
+        SF1000001:
+          order-id: SF1000001
+          sender: 张三
+          sender-city: 上海
+          receiver: 李四
+          receiver-city: 北京
+          item-type: 电子产品
+          weight: 2.5
+          status: 运输中
+          create-time: "2026-09-05 10:30:00"
+        SF1000002:
+          order-id: SF1000002
+          sender: 王五
+          sender-city: 广州
+          receiver: 赵六
+          receiver-city: 成都
+          item-type: 服装
+          weight: 1.2
+          status: 已签收
+          create-time: "2026-09-03 14:20:00"
+
+      # 模拟物流轨迹数据
+      mock-tracking-data:
+        SF1000001:
+          - time: "2026-09-05 10:30:00"
+            location: 上海集散中心
+            status: 已揽收
+          - time: "2026-09-05 18:00:00"
+            location: 上海转运中心
+            status: 已发出
+          - time: "2026-09-06 06:30:00"
+            location: 南京转运中心
+            status: 运输中
+          - time: "2026-09-06 14:00:00"
+            location: 北京集散中心
+            status: 到达目的地
+        SF1000002:
+          - time: "2026-09-03 14:20:00"
+            location: 广州集散中心
+            status: 已揽收
+          - time: "2026-09-04 20:00:00"
+            location: 成都集散中心
+            status: 派送中
+          - time: "2026-09-05 09:15:00"
+            location: 成都市武侯区
+            status: 已签收
+
+# 业务配置
+
+# 日志
+logging:
+  level:
+    com.logistics.ai: DEBUG
+    org.springframework.ai: DEBUG

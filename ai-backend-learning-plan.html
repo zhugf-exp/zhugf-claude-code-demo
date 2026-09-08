@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 后端开发学习计划 - 物流 Agent 项目驱动</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 2.4em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .header .subtitle {
+            font-size: 1.15em;
+            color: #a0a0c0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .target-box {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 20px 28px;
+            margin: 30px auto;
+            max-width: 680px;
+            text-align: center;
+        }
+
+        .target-box h3 {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .target-box .formula {
+            font-size: 1.05em;
+            color: #c0c0e0;
+            margin-bottom: 10px;
+        }
+
+        .target-box .note {
+            font-size: 0.95em;
+            color: #9090b0;
+        }
+
+        /* Phase sections */
+        .phase {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .phase:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .phase-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .phase-1 .phase-number { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .phase-2 .phase-number { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .phase-3 .phase-number { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .phase-4 .phase-number { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a1a3e; }
+
+        .phase-title h2 {
+            font-size: 1.5em;
+            color: #fff;
+        }
+
+        .phase-title .duration {
+            font-size: 0.9em;
+            color: #a0a0c0;
+        }
+
+        /* Skill cards */
+        .skill-group {
+            margin-bottom: 22px;
+        }
+
+        .skill-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .skill-group h3 {
+            font-size: 1.1em;
+            color: #c8c8f0;
+            margin-bottom: 10px;
+            padding-left: 12px;
+            border-left: 3px solid #667eea;
+        }
+
+        .phase-2 .skill-group h3 { border-left-color: #f093fb; }
+        .phase-3 .skill-group h3 { border-left-color: #4facfe; }
+        .phase-4 .skill-group h3 { border-left-color: #43e97b; }
+
+        .skill-group ul {
+            list-style: none;
+            padding-left: 16px;
+        }
+
+        .skill-group ul li {
+            position: relative;
+            padding: 4px 0 4px 20px;
+            color: #b0b0d0;
+            font-size: 0.95em;
+        }
+
+        .skill-group ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+        }
+
+        .phase-2 .skill-group ul li::before { color: #f093fb; }
+        .phase-3 .skill-group ul li::before { color: #4facfe; }
+        .phase-4 .skill-group ul li::before { color: #43e97b; }
+
+        .highlight {
+            color: #f0c040;
+            font-weight: 600;
+        }
+
+        .star {
+            color: #f5576c;
+        }
+
+        /* Agent cards in phase 2 */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .agent-card {
+            background: rgba(240, 147, 251, 0.08);
+            border: 1px solid rgba(240, 147, 251, 0.2);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.92em;
+        }
+
+        .agent-card .agent-emoji {
+            font-size: 1.3em;
+            margin-right: 6px;
+        }
+
+        .agent-card .agent-name {
+            color: #f093fb;
+            font-weight: 600;
+        }
+
+        .agent-card .agent-desc {
+            color: #a0a0c0;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+
+        /* Architecture diagram */
+        .arch-diagram {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 14px 0;
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.88em;
+            line-height: 1.7;
+            color: #a0d0a0;
+            overflow-x: auto;
+        }
+
+        .arch-diagram .comment { color: #607060; }
+        .arch-diagram .layer { color: #43e97b; }
+
+        /* Timeline table */
+        .timeline-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.95em;
+        }
+
+        .timeline-table th {
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .timeline-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: #b0b0d0;
+        }
+
+        .timeline-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Tips section */
+        .tips {
+            background: rgba(67, 233, 123, 0.06);
+            border: 1px solid rgba(67, 233, 123, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 32px;
+        }
+
+        .tips h2 {
+            color: #43e97b;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+        }
+
+        .tips ol {
+            padding-left: 20px;
+        }
+
+        .tips ol li {
+            padding: 6px 0;
+            color: #b0d0b0;
+            font-size: 0.95em;
+        }
+
+        .tips ol li strong {
+            color: #43e97b;
+        }
+
+        .total-time {
+            text-align: center;
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            font-size: 1.05em;
+            color: #c0c0e0;
+        }
+
+        .total-time strong {
+            color: #f0c040;
+            font-size: 1.2em;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container { padding: 20px 16px 60px; }
+            .header h1 { font-size: 1.8em; }
+            .phase { padding: 20px; }
+            .agent-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 AI 后端开发学习计划</h1>
+            <p class="subtitle">Java 开发工程师转型指南 — 通过 Agent 物流项目驱动学习</p>
+
+            <div class="target-box">
+                <h3>🎯 目标定位</h3>
+                <p class="formula"><strong>AI 后端开发</strong> = 传统后端能力 + LLM 应用层能力 + Agent 编排能力</p>
+                <p class="note">物流场景非常适合做 AI 项目：多轮对话、复杂业务决策、多系统集成、实时数据处理</p>
+            </div>
+        </div>
+
+        <!-- Phase 1 -->
+        <div class="phase phase-1">
+            <div class="phase-header">
+                <div class="phase-number">一</div>
+                <div class="phase-title">
+                    <h2>基础补齐</h2>
+                    <span class="duration">⏱ 2~3 周</span>
+                </div>
+            </div>
+
+            <div class="skill-group">
+                <h3>1. Python 基础（1 周）</h3>
+                <ul>
+                    <li>Java 转 Python 很快，不需要系统学完</li>
+                    <li>重点：<span class="highlight">asyncio</span> 异步编程、<span class="highlight">pydantic</span> 数据模型、类型提示</li>
+                    <li>推荐：直接边写边学，在实践中掌握</li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <h3>2. LLM 基础概念（1 周）</h3>
+                <ul>
+                    <li><span class="highlight">Prompt Engineering</span> — 系统提示词、few-shot、CoT 思维链</li>
+                    <li><span class="highlight">Function Calling / Tool Use</span> — 让模型调用工具</li>
+                    <li><span class="highlight">RAG</span>（检索增强生成）— 物流知识库必备</li>
+                    <li>流式输出（SSE）</li>
+                    <li>推荐资源：Anthropic 官方文档、OpenAI Cookbook</li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <h3>3. 选定技术栈</h3>
+                <ul>
+                    <li>LLM SDK：Anthropic SDK / OpenAI SDK（先学一个，迁移成本低）</li>
+                    <li>Agent 框架：<span class="highlight">LangGraph</span>（推荐，适合复杂工作流）或 <span class="highlight">CrewAI</span>（多 Agent 协作）</li>
+                    <li>向量数据库：Qdrant / Weaviate（RAG 用）</li>
+                    <li>后端框架：FastAPI（Python）或 Spring AI（Java 栈）</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="phase phase-2">
+            <div class="phase-header">
+                <div class="phase-number">二</div>
+                <div class="phase-title">
+                    <h2>核心技能 <span class="star">⭐</span></h2>
+                    <span class="duration">⏱ 3~4 周 — 边学边做物流项目</span>
+                </div>
+            </div>
+
+            <div class="skill-group">
+                <h3>1. 基础 Agent 开发（1 周）</h3>
+                <ul>
+                    <li>单 Agent + Tool 模式</li>
+                    <li>物流场景练习：做一个"物流查询助手"</li>
+                    <li>工具：查询运单、查询物流轨迹、查询运费</li>
+                    <li>让 Agent 根据用户自然语言选择调用哪个工具</li>
+                    <li>关键概念：Agent Loop、Tool Schema、ReAct 模式</li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <h3>2. 多 Agent 编排（1~2 周）<span class="star"> ⭐ 核心重点</span></h3>
+                <ul>
+                    <li>物流场景天然适合多 Agent 协作：</li>
+                </ul>
+                <div class="agent-grid">
+                    <div class="agent-card">
+                        <span class="agent-emoji">📦</span>
+                        <span class="agent-name">订单 Agent</span>
+                        <div class="agent-desc">处理下单、改单、取消</div>
+                    </div>
+                    <div class="agent-card">
+                        <span class="agent-emoji">🚚</span>
+                        <span class="agent-name">调度 Agent</span>
+                        <div class="agent-desc">路线规划、车辆分配</div>
+                    </div>
+                    <div class="agent-card">
+                        <span class="agent-emoji">💰</span>
+                        <span class="agent-name">计费 Agent</span>
+                        <div class="agent-desc">运费计算、异常费用</div>
+                    </div>
+                    <div class="agent-card">
+                        <span class="agent-emoji">📞</span>
+                        <span class="agent-name">客服 Agent</span>
+                        <div class="agent-desc">投诉处理、工单创建</div>
+                    </div>
+                </div>
+                <ul>
+                    <li>学习 Agent 之间的通信、任务委派、结果汇总</li>
+                    <li>技术：LangGraph 的 StateGraph、CrewAI 的 Crew 编排</li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <h3>3. RAG 知识库搭建（1 周）</h3>
+                <ul>
+                    <li>物流场景：物流政策文档、FAQ、禁运品列表、区域编码</li>
+                    <li>技术流程：文档切分 → Embedding → 向量存储 → 检索 → 生成</li>
+                    <li>进阶：混合检索（向量 + 关键词）、Reranking</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="phase phase-3">
+            <div class="phase-header">
+                <div class="phase-number">三</div>
+                <div class="phase-title">
+                    <h2>进阶能力</h2>
+                    <span class="duration">⏱ 3~4 周</span>
+                </div>
+            </div>
+
+            <div class="skill-group">
+                <h3>1. Agent + 外部系统集成</h3>
+                <ul>
+                    <li><span class="highlight">MCP</span>（Model Context Protocol）— 标准化 Agent 的工具接口</li>
+                    <li>物流 API 对接：快递100、高德地图（路线规划）</li>
+                    <li>数据库操作：让 Agent 能查询/写入物流数据库</li>
+                    <li>消息队列：异步任务处理（物流状态变更通知）</li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <h3>2. 记忆与会话管理</h3>
+                <ul>
+                    <li>短期记忆：会话上下文管理（滑动窗口、摘要）</li>
+                    <li>长期记忆：用户偏好、历史订单分析</li>
+                    <li>实现：Redis（会话存储）+ 向量数据库（长期记忆）</li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <h3>3. 可观测性与评估</h3>
+                <ul>
+                    <li>Agent 执行链路追踪（LangSmith / LangFuse）</li>
+                    <li>评估指标：任务完成率、响应延迟、Token 消耗</li>
+                    <li>日志与告警</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Phase 4 -->
+        <div class="phase phase-4">
+            <div class="phase-header">
+                <div class="phase-number">四</div>
+                <div class="phase-title">
+                    <h2>工程化与上线</h2>
+                    <span class="duration">⏱ 2~3 周</span>
+                </div>
+            </div>
+
+            <div class="skill-group">
+                <h3>1. 项目架构设计</h3>
+                <div class="arch-diagram">
+<span class="comment">物流 AI 平台架构：</span>
+├── <span class="layer">API 网关层</span>（FastAPI / Spring Boot）
+├── <span class="layer">Agent 编排层</span>（LangGraph / CrewAI）
+├── <span class="layer">工具服务层</span>（独立的微服务）
+│   ├── 订单服务
+│   ├── 调度服务
+│   └── 计费服务
+├── <span class="layer">知识层</span>（向量数据库 + 关系数据库）
+└── <span class="layer">基础设施层</span>（Redis、消息队列、监控）
+                </div>
+            </div>
+
+            <div class="skill-group">
+                <h3>2. 部署与安全</h3>
+                <ul>
+                    <li>Docker 容器化部署</li>
+                    <li>API 鉴权、Agent 权限控制</li>
+                    <li>防止 Prompt 注入攻击</li>
+                    <li>Token 消耗控制与限流</li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <h3>3. 前端集成</h3>
+                <ul>
+                    <li>流式对话 UI（SSE / WebSocket）</li>
+                    <li>可视化 Agent 执行过程（中间步骤展示）</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="phase">
+            <div class="phase-header">
+                <div class="phase-number" style="background: linear-gradient(135deg, #f0c040, #f5576c);">📅</div>
+                <div class="phase-title">
+                    <h2>总体时间线</h2>
+                </div>
+            </div>
+
+            <table class="timeline-table">
+                <thead>
+                    <tr>
+                        <th>阶段</th>
+                        <th>时间</th>
+                        <th>产出</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>阶段一：基础补齐</td>
+                        <td>2~3 周</td>
+                        <td>能跑通一个简单的 Tool-Calling Agent</td>
+                    </tr>
+                    <tr>
+                        <td>阶段二：核心技能</td>
+                        <td>3~4 周</td>
+                        <td>物流多 Agent 系统 MVP</td>
+                    </tr>
+                    <tr>
+                        <td>阶段三：进阶能力</td>
+                        <td>3~4 周</td>
+                        <td>完整的物流 AI 平台</td>
+                    </tr>
+                    <tr>
+                        <td>阶段四：工程化与上线</td>
+                        <td>2~3 周</td>
+                        <td>可部署、可演示的完整项目</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="total-time">
+                总计：约 <strong>10~14 周（2.5~3.5 个月）</strong>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="tips">
+            <h2>💡 几个建议</h2>
+            <ol>
+                <li><strong>不要从零学起</strong> — 你有 Java 后端经验，设计模式、微服务、数据库这些都是复用的，集中精力学 AI 特有的部分</li>
+                <li><strong>项目驱动 > 教程驱动</strong> — 直接从物流场景出发，遇到问题再去学，效率最高</li>
+                <li><strong>先单 Agent 后多 Agent</strong> — 先把一个 Agent 做好做精，再扩展到多 Agent</li>
+                <li><strong>关注 Anthropic/Claude 生态</strong> — Tool Use、MCP、Prompt Engineering 都是行业标杆</li>
+                <li><strong>建一个 GitHub 仓库</strong> — 边学边写，这就是你的转型作品集 🚀</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

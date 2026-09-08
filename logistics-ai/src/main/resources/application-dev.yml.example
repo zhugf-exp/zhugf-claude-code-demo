@@ -1,0 +1,37 @@
+# 开发环境配置示例
+# 复制此文件为 application-dev.yml 并填写真实的API密钥
+
+spring:
+  ai:
+    anthropic:
+      api-key: your-ai-api-key-here
+      chat:
+        options:
+          model: claude-sonnet-4-20250514
+          max-tokens: 2048
+          temperature: 0.7
+
+logistics:
+  ai:
+    system-prompt: |
+      你是一个专业的物流 AI 助手（开发环境），负责帮助用户处理物流相关问题。
+      你的能力包括：
+      1. 查询运单状态和物流轨迹
+      2. 计算运费
+      3. 规划物流路线
+      4. 处理客户投诉和建议
+
+      请用简洁、专业的中文回答用户的问题。
+      如果需要调用工具获取信息，请先向用户说明你将要做什么。
+
+    session:
+      timeout-minutes: 60
+      max-sessions: 100
+
+    security:
+      cors-enabled: true
+      allowed-origins:
+        - http://localhost:3000
+        - http://localhost:8080
+        - http://127.0.0.1:3000
+        - http://127.0.0.1:8080
