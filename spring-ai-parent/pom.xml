@@ -37,6 +37,16 @@
             <version>2.18.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <!-- 关键：添加 WebSocket starter，它会自动引入 jakarta.websocket-api -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>

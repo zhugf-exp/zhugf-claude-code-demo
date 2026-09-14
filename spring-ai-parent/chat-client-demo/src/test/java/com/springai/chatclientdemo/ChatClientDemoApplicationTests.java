@@ -11,6 +11,9 @@ class ChatClientDemoApplicationTests {
 
     @Test
     public  void testQwen(@Autowired ChatClient.Builder chatClientBuild) {
+        ChatClient chatClient = chatClientBuild.build();
+        String content = chatClient.prompt().user("现在是北京时间几点").call().content();
+        System.out.println(content);
 
     }
 
