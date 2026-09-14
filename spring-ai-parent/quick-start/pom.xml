@@ -8,6 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <groupId>com.springai</groupId>
     <artifactId>quick-start</artifactId>
     <name>quick-start</name>
@@ -16,6 +17,7 @@
     <properties>
         <java.version>17</java.version>
     </properties>
+
     <dependencies>
         <!--  bailian -->
         <dependency>
