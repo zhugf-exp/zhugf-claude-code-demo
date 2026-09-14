@@ -9,14 +9,13 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>com.springai</groupId>
-    <artifactId>quick-start</artifactId>
-    <name>quick-start</name>
-    <description>quick-start</description>
+    <artifactId>chat-client-demo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>chat-client-demo</name>
+    <description>chat-client-demo</description>
 
-    <properties>
-        <java.version>17</java.version>
-    </properties>
     <dependencies>
+
         <!--  bailian -->
         <dependency>
             <groupId>com.alibaba.cloud.ai</groupId>
