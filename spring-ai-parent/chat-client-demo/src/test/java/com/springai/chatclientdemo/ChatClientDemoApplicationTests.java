@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.ai.chat.client.ChatClient;
+import reactor.core.publisher.Flux;
 
 @SpringBootTest
 class ChatClientDemoApplicationTests {
@@ -18,5 +19,13 @@ class ChatClientDemoApplicationTests {
     }
 
 
+    @Test
+    public  void testStreamQwen(@Autowired ChatClient.Builder chatClientBuild) {
+        ChatClient chatClient = chatClientBuild.build();
+        Flux<String> content = chatClient.prompt().user("你是千问哪个版本")
+                .stream()
+                .content();
+        content.toIterable().forEach(s -> System.out.println(s));
 
+    }
 }
